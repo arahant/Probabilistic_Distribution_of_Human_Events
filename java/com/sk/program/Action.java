@@ -30,6 +30,8 @@ public class Action {
 			return probabilityRed;
 	}
 	
+	/* Every time an action is committed, the probability of its nature increases.
+	*/
 	public double commitAction(int n) {
 		double probability = 0d;
 		if(n==1) {
