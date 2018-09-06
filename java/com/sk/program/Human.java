@@ -31,6 +31,9 @@ public class Human {
 		}
 	}
 	
+	/* This method is used to alter the influence the action has on the personality of the actor and the receiver.
+	The personality types are colour coded
+	*/
 	private void influencePersonality(Action action) {
 		String[] personality_types = this.personality.split("-");
 		float BH = Float.parseFloat(personality_types[0]);
