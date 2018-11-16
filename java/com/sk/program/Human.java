@@ -4,19 +4,13 @@ import java.util.List;
 
 public class Human {
 
-	/* 	private static enum Base_Nature {Benevolent, Indifferent, Malevolent};
-	 *	private static enum Base_Personality {Morality, Immorality, Integrity, Fragility, Coexistence, Survivalism}
-	 * 	The Base Natures are Benevolence (Blue), Indifference (Green) and Malevolence (Red)
-	 * */
-
-	public static int LIMIT = 255;
 	private Nature personality;
 
 	public Nature getPersonality() {
 		return personality;
 	}
 
-	public void alterPersonality(Nature p) {
+	public void setPersonality(Nature p) {
 		this.personality = p;
 	}
 
@@ -27,38 +21,46 @@ public class Human {
 			Action action = actions.get(i);
 			target.influenceNature(action,false);
 			actor.influenceNature(action,true);
-			action.alterProbability();
+			action.updateProbability();
 		}
 	}
 
 	private void influenceNature(Action action, boolean actor) {
 		String[] human_nature = this.personality.getNature().split("-");
-		float RH = Float.parseFloat(human_nature[0]);
-		float GH = Float.parseFloat(human_nature[1]);
-		float BH = Float.parseFloat(human_nature[2]);
+		float AH = Float.parseFloat(human_nature[0]);
+		float BH = Float.parseFloat(human_nature[1]);
+		float CH = Float.parseFloat(human_nature[2]);
+		float DH = Float.parseFloat(human_nature[3]);
 
+		// the change in the nature influenced by the action
 		String[] action_nature = action.getNature().getNature().split("-");
-		int RA = Integer.parseInt(action_nature[0]);
-		int GA = Integer.parseInt(action_nature[1]);
-		int BA = Integer.parseInt(action_nature[2]);
+		float dA = Float.parseFloat(action_nature[0]);
+		float dB = Float.parseFloat(action_nature[1]);
+		float dC = Float.parseFloat(action_nature[2]);
+		float dD = Float.parseFloat(action_nature[3]);
 
-		float dR = (float)RA/LIMIT;
-		float dG = (float)GA/LIMIT;
-		float dB = (float)BA/LIMIT;
-		
 		// the influence is less pronounced on the actor than on the target
 		if(actor) {
-			dR*=0.01;dG*=0.01;dB*=0.01;
+			dA*=0.01;dB*=0.01;dC*=0.01;dD*=0.01;
 		}
-		// the influence is less pronounced when the human nature is INDIFFERENT
+		
+		// updating the influence by the probability of the type of the human's personality
 		String type = this.personality.getNatureType();
+		double probability = action.getProbability(type);
+		dA*=probability;dB*=probability;dC*=probability;dD*=probability;
+		
+		// the influence is less pronounced when the human nature is INDIFFERENT
 		if(type.equals(Nature.INDIFFERENT)) {
-			dR*=0.01;dG*=0.01;dB*=0.01;
+			dA*=0.01;dB*=0.01;dC*=0.01;dD*=0.01;
 		}
 
-		RH+=dR; GH+=dG; BH+=dB;
-		Nature newNature = new Nature(RH,GH,BH);
-		this.alterPersonality(newNature);
+		// normalizing the altered nature's dimensions
+		AH = (AH+dA)/(1+dA); 
+		BH = (BH+dB)/(1+dB); 
+		CH = (CH+dC)/(1+dC);
+		DH = (DH+dD)/(1+dD);
+		Nature newNature = new Nature(AH,BH,CH,DH);
+		this.setPersonality(newNature);
 	}
 
 }
