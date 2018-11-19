@@ -1,9 +1,12 @@
-package com.sk.program;
+package com.sk.program.action;
+
+import com.sk.program.nature.Nature;
+import com.sk.store.Database;
 
 public class Action {
 
 	private Nature nature;
-	
+
 	private double probabilityBlue; 	//for Benevolence
 	private static int action_count_B = 0;
 
@@ -20,35 +23,41 @@ public class Action {
 	public Nature getNature() {
 		return this.nature;
 	}
-	
+
 	public double getProbability(String type) {
 		switch(type) {
-			case Nature.BENEVOLENT:
-				return probabilityBlue;
-			case Nature.INDIFFERENT:
-				return probabilityGreen;
-			case Nature.MALEVOLENT:
-				return probabilityRed;
+		case Nature.BENEVOLENT:
+			return probabilityBlue;
+		case Nature.INDIFFERENT:
+			return probabilityGreen;
+		case Nature.MALEVOLENT:
+			return probabilityRed;
 		}
 		return 0;
 	}
 
-	public double alterProbability() {
+	public void updateProbability() {
 		String type = this.getNature().getNatureType();
-		double probability = 0d;
-		if(type.equals(Nature.BENEVOLENT)) {
+		//double probability = 0d;
+		switch(type) {
+		case Nature.BENEVOLENT:
 			probabilityBlue = ++action_count_B/++action_count;
-			probability = probabilityBlue;
-		}
-		else if(type.equals(Nature.INDIFFERENT)) {
+			//probability = probabilityBlue;
+			break;
+		case Nature.INDIFFERENT:
 			probabilityGreen = ++action_count_G/++action_count;
-			probability = probabilityGreen;
-		}
-		else {
+			//probability = probabilityGreen;
+			break;
+		case Nature.MALEVOLENT:
 			probabilityRed = ++action_count_R/++action_count;
-			probability = probabilityRed;
+			//probability = probabilityRed;
+			break;
 		}
-		return probability;
+		//return probability;
+	}
+	
+	public void updateActionSet() {
+		Database.updateDb(this);
 	}
 
 }
