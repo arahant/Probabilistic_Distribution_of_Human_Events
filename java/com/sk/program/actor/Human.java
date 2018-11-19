@@ -1,17 +1,49 @@
-package com.sk.program;
+package com.sk.program.actor;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.sk.program.action.Action;
+import com.sk.program.nature.Nature;
+import com.sk.program.nature.Power;
 
 public class Human {
 
 	private Nature personality;
+	private Power muscle;
+	private Power political;
+	
+	private List<Human> connections;
+	
+	private int id;
+	private int groupId;
+	private String name;
+	private float anxietyThreshold;
+	
+	public Human(float d1, float d2, float d3, float d4) {
+        personality = new Nature(d1, d2, d3, d4);
+		connections = new ArrayList<>();
+	}
 
 	public Nature getPersonality() {
 		return personality;
 	}
-
 	public void setPersonality(Nature p) {
 		this.personality = p;
+	}
+	
+	public void addConnection(Human arg) {
+		connections.add(arg);
+	}
+	public List<Human> getConnection() {
+		return connections;
+	}
+	
+	public void resetAnxietyThreshold(float t) {
+		this.anxietyThreshold = t;
+	}
+	public float getAnxietyThreshold() {
+		return anxietyThreshold;
 	}
 
 	// An action influences both the actor and target(s) and changes the probability of the nature of the action
@@ -39,21 +71,26 @@ public class Human {
 		float dC = Float.parseFloat(action_nature[2]);
 		float dD = Float.parseFloat(action_nature[3]);
 
-		// the influence is less pronounced on the actor than on the target
-		if(actor) {
-			dA*=0.01;dB*=0.01;dC*=0.01;dD*=0.01;
-		}
+		// the influence is less pronounced on the actor than on the recipient
+		float act = 1f;
+		if(actor)
+			act = 0.01f;
 		
 		// updating the influence by the probability of the type of the human's personality
 		String type = this.personality.getNatureType();
-		double probability = action.getProbability(type);
-		dA*=probability;dB*=probability;dC*=probability;dD*=probability;
+		float pr = (float)action.getProbability(type);
 		
 		// the influence is less pronounced when the human nature is INDIFFERENT
-		if(type.equals(Nature.INDIFFERENT)) {
-			dA*=0.01;dB*=0.01;dC*=0.01;dD*=0.01;
-		}
-
+		float inf = 1f;
+		if(type.equals(Nature.INDIFFERENT))
+			inf = 0.01f;
+		
+		// effective change in nature
+		dA*=pr*act*inf;
+		dB*=pr*act*inf;
+		dC*=pr*act*inf;
+		dD*=pr*act*inf;
+		
 		// normalizing the altered nature's dimensions
 		AH = (AH+dA)/(1+dA); 
 		BH = (BH+dB)/(1+dB); 
