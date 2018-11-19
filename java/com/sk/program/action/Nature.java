@@ -1,14 +1,15 @@
-package com.sk.program;
+package com.sk.program.nature;
 
 public class Nature {
 
-    /*
-     * The aspects of human personality captured in 4 dimensions
-    private enum dimension1 {MORALITY, IMMORALITY} (Red)
-    private enum dimension2 {INTEGRITY, FRAGILITY} (Green)
-    private enum dimension3 {COEXISTENCE, SURVIVALISM} (Blue)
-    private enum dimension4 {RATIONAL, IRRATIONAL}
-    */
+    /* 	The aspects of Human personality captured in 4 dimensions
+     * 	which can be extended to Groups as well
+     * 	Used to derive Philosophy
+     *	private enum dimension1 {MORALITY (1), IMMORALITY (0)}
+     *	private enum dimension2 {INTEGRITY (1), FRAGILITY (0)}
+     *	private enum dimension3 {COEXISTENCE (1), SURVIVALISM (0)}
+     *	private enum dimension4 {RATIONALITY (1), IRRATIONALITY (0)}
+     */
 
 	public Nature(float d1, float d2, float d3, float d4) {
         this.nature = d1+"-"+d2+"-"+d3+"-"+d4;
@@ -19,8 +20,8 @@ public class Nature {
 	public static final String MALEVOLENT = "Malevolence";
 	public static final String INDIFFERENT = "Indifference";
 
-    public void setNature(float d1, float d2, float d3) {
-        this.nature = d1+"-"+d2+"-"+d3;
+    public void setNature(float d1, float d2, float d3, float d4) {
+        this.nature = d1+"-"+d2+"-"+d3+"-"+d4;
     }
     public String getNature() {
         return this.nature;
@@ -42,18 +43,18 @@ public class Nature {
 			case "1.1.1.1":
 			case "1.1.1.0":
 			case "1.0.1.1": 
-			case "1.0.1.0":
 				type = BENEVOLENT;
 				break;
 			case "1.1.0.1": 
 			case "1.1.0.0":
+			case "1.0.1.0":
 			case "1.0.0.1": 
+			case "1.0.0.0":
 			case "0.1.1.1": 
 			case "0.0.1.1": 
 			case "0.0.1.0":
 				type = INDIFFERENT;
 				break;
-			case "1.0.0.0":
 			case "0.1.1.0":
 			case "0.1.0.1":
 			case "0.1.0.0":
