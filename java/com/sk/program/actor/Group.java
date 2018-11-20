@@ -1,16 +1,17 @@
 package com.sk.program.actor;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.sk.program.action.Event;
 import com.sk.program.nature.History;
 import com.sk.program.nature.Nature;
-import com.sk.program.nature.Philosophy;
 import com.sk.program.nature.Power;
 
 public class Group {
 	
 	private Nature nature;
-	private Philosophy philosophy;
+	private Nature philosophy;
 	private History history;
 	
 	private Power muscle;
@@ -126,10 +127,40 @@ public class Group {
 	
 	// philosophy
 	public void setPhilosophy(Nature ph) {
-		philosophy = new Philosophy(ph);
+		philosophy = new Nature(ph);
 	}
 	
-	public Philosophy getPhilosophy() {
+	public void updatePhilosophyHistory() {
+		LinkedHashMap<Event,Nature> actions = history.getHistory();
+		for(Event event:actions.keySet()) {
+			Nature reaction = actions.get(event);
+			updatePhilosophy(reaction);
+		}
+	}
+	
+	public void updatePhilosophy(Nature ph) {
+		String[] pd = philosophy.getNature().split("-");
+		float D1 = Float.parseFloat(pd[0]);
+		float D2 = Float.parseFloat(pd[1]);
+		float D3 = Float.parseFloat(pd[2]);
+		float D4 = Float.parseFloat(pd[3]);
+		
+		String[] ph_change = ph.getNature().split("-");
+		float d1 = Float.parseFloat(ph_change[0]);
+		float d2 = Float.parseFloat(ph_change[1]);
+		float d3 = Float.parseFloat(ph_change[2]);
+		float d4 = Float.parseFloat(ph_change[3]);
+		
+		D1 = (D1+D1-d1)/(1+D1-d1);
+		D2 = (D2+D2-d2)/(1+D2-d2);
+		D1 = (D3+D3-d3)/(1+D3-d3);
+		D1 = (D4+D4-d4)/(1+D4-d4);
+		
+		Nature newNature = new Nature(D1,D2,D3,D4);
+		philosophy = newNature;
+	}
+	
+	public Nature getPhilosophy() {
 		return this.philosophy;
 	}
 
