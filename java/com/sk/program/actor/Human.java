@@ -24,6 +24,11 @@ public class Human {
         personality = new Nature(d1, d2, d3, d4);
 		connections = new ArrayList<>();
 	}
+	
+	public Human(Nature nature) {
+        personality = nature;
+		connections = new ArrayList<>();
+	}
 
 	public Nature getPersonality() {
 		return personality;
