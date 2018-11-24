@@ -1,33 +1,47 @@
 package com.sk.program.actor;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.sk.program.action.Action;
 import com.sk.program.nature.Nature;
-import com.sk.program.nature.Power;
 
 public class Human {
 
 	private Nature personality;
-	private Power muscle;
-	private Power political;
+	private float muscle;
+	private float political;
 	
-	private List<Human> connections;
+	private LinkedHashMap<Human,Float> connections;
 	
 	private int id;
 	private int groupId;
 	private String name;
 	private float anxietyThreshold;
 	
+	private static int c = 0;
+	
 	public Human(float d1, float d2, float d3, float d4) {
+		id = ++c;
         personality = new Nature(d1, d2, d3, d4);
-		connections = new ArrayList<>();
+		connections = new LinkedHashMap<>();
 	}
 	
 	public Human(Nature nature) {
         personality = nature;
-		connections = new ArrayList<>();
+		connections = new LinkedHashMap<>();
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
+	public int getGroupId() {
+		return groupId;
 	}
 
 	public Nature getPersonality() {
@@ -37,10 +51,10 @@ public class Human {
 		this.personality = p;
 	}
 	
-	public void addConnection(Human arg) {
-		connections.add(arg);
+	public void addConnection(Human arg, float weight) {
+		connections.put(arg,weight);
 	}
-	public List<Human> getConnection() {
+	public LinkedHashMap<Human,Float> getConnection() {
 		return connections;
 	}
 	
