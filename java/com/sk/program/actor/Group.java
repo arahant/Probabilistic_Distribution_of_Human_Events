@@ -1,27 +1,30 @@
 package com.sk.program.actor;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.sk.program.action.Event;
 import com.sk.program.nature.History;
 import com.sk.program.nature.Nature;
-import com.sk.program.nature.Power;
 
 public class Group {
+	
+	private int id;
+	private String name;
 	
 	private Nature nature;
 	private Nature philosophy;
 	private History history;
 	
-	private Power muscle;
-	private Power political;
-	
-	private int id;
-	private String name;
+	private float muscle;
+	private float political;
+	private float unity;
 	private float groupAnxiety;
+	
 	private Human leader;
 	private List<Human> members;
+	private HashMap<Integer,Integer> traversed;
 	
 	private static int count = 0;
 	
@@ -39,11 +42,11 @@ public class Group {
 	}
 	
 	public String getName() {
-		return this.name;
+		return name;
 	}
 	
-	public int gedId() {
-		return this.id;
+	public int getId() {
+		return id;
 	}
 	
 	// leader
@@ -52,7 +55,7 @@ public class Group {
 	}
 	
 	public Human getLeader() {
-		return this.leader;
+		return leader;
 	}
 	
 	// members
@@ -63,7 +66,7 @@ public class Group {
 	}
 	
 	public List<Human> getMembers() {
-		return this.members;
+		return members;
 	}
 	
 	// anxiety threshold
@@ -82,12 +85,12 @@ public class Group {
 	}
 	
 	public float getAnxietyThreshold() {
-		return this.groupAnxiety;
+		return groupAnxiety;
 	}
 	
 	// nature
-	public void setNature(Nature nature) {
-		this.nature = nature;
+	public void setNature(Nature n) {
+		this.nature = n;
 	}
 	
 	public void updateNature(Human member) {
@@ -122,14 +125,15 @@ public class Group {
 	}
 	
 	public Nature getNature() {
-		return this.nature;
+		return nature;
 	}
 	
 	// philosophy
 	public void setPhilosophy(Nature ph) {
-		philosophy = new Nature(ph);
+		this.philosophy = new Nature(ph);
 	}
 	
+	// the group's history influences its philosophy 
 	public void updatePhilosophyHistory() {
 		LinkedHashMap<Event,Nature> actions = history.getHistory();
 		for(Event event:actions.keySet()) {
@@ -146,22 +150,60 @@ public class Group {
 		float D4 = Float.parseFloat(pd[3]);
 		
 		String[] ph_change = ph.getNature().split("-");
-		float d1 = Float.parseFloat(ph_change[0]);
-		float d2 = Float.parseFloat(ph_change[1]);
-		float d3 = Float.parseFloat(ph_change[2]);
-		float d4 = Float.parseFloat(ph_change[3]);
+		float d1 = D1-Float.parseFloat(ph_change[0]);
+		float d2 = D2-Float.parseFloat(ph_change[1]);
+		float d3 = D3-Float.parseFloat(ph_change[2]);
+		float d4 = D4-Float.parseFloat(ph_change[3]);
 		
-		D1 = (D1+D1-d1)/(1+D1-d1);
-		D2 = (D2+D2-d2)/(1+D2-d2);
-		D1 = (D3+D3-d3)/(1+D3-d3);
-		D1 = (D4+D4-d4)/(1+D4-d4);
+		D1 = (D1+d1)/(1+d1);
+		D2 = (D2+d2)/(1+d2);
+		D1 = (D3+d3)/(1+d3);
+		D1 = (D4+d4)/(1+d4);
 		
 		Nature newNature = new Nature(D1,D2,D3,D4);
 		philosophy = newNature;
 	}
 	
 	public Nature getPhilosophy() {
-		return this.philosophy;
+		return philosophy;
+	}
+	
+	// power
+	public void setMusclePower(float p) {
+		this.muscle = p;
+	}
+	public void setPoliticalPower(float p) {
+		this.political = p;
+	}
+	
+	public float getMuscle() {
+		return muscle;
+	}
+	public float getPolitical() {
+		return political;
+	}
+	
+	// unity of the group
+	public void calculateGroupUnity() {
+		for(Human member:members) {
+			LinkedHashMap<Human, Float> connections = member.getConnection();
+			for(Human link:connections.keySet())
+				if(members.contains(link) && !isTraversed(member.getId(),link.getId()))
+					unity+=connections.get(link);
+		}
+	}
+	
+	private boolean isTraversed(int h1, int h2) {
+		if(traversed==null)
+			traversed = new HashMap<>();
+		if(traversed.put(h1,h2)==null || traversed.put(h2,h1)==null)
+			return false;
+		else
+			return true;
+	}
+	
+	public float getGroupUnity() {
+		return unity;
 	}
 
 }
