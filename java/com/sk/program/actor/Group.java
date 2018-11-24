@@ -168,6 +168,23 @@ public class Group {
 		return philosophy;
 	}
 	
+	// history
+	public void defineHistory(LinkedHashMap<Event,Nature> actions) {
+		if(history==null)
+			history = new History();
+		history.addHistoricalEvents(actions);
+	}
+	
+	public void defineHistory(Event ev, Nature nat) {
+		if(history==null)
+			history = new History();
+		history.addHistoricalEvents(ev,nat);
+	}
+	
+	public History getHistory() {
+		return history;
+	}
+	
 	// power
 	public void setMusclePower(float p) {
 		this.muscle = p;
