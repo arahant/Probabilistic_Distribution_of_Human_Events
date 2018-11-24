@@ -1,6 +1,5 @@
 package com.sk.program.actor;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -9,16 +8,13 @@ import com.sk.program.nature.Nature;
 
 public class Human {
 
-	private Nature personality;
-	private float muscle;
-	private float political;
-	
-	private LinkedHashMap<Human,Float> connections;
-	
 	private int id;
 	private int groupId;
 	private String name;
+	
 	private float anxietyThreshold;
+	private Nature personality;
+	private LinkedHashMap<Human,Float> connections;
 	
 	private static int c = 0;
 	
@@ -29,12 +25,20 @@ public class Human {
 	}
 	
 	public Human(Nature nature) {
+		id = ++c;
         personality = nature;
 		connections = new LinkedHashMap<>();
 	}
 	
 	public int getId() {
 		return id;
+	}
+	
+	public void setName(String n) {
+		this.name = n;
+	}
+	public String getName() {
+		return name;
 	}
 	
 	public void setGroupId(int groupId) {
@@ -44,11 +48,11 @@ public class Human {
 		return groupId;
 	}
 
-	public Nature getPersonality() {
-		return personality;
-	}
 	public void setPersonality(Nature p) {
 		this.personality = p;
+	}
+	public Nature getPersonality() {
+		return personality;
 	}
 	
 	public void addConnection(Human arg, float weight) {
