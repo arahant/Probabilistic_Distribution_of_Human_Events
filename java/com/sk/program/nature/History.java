@@ -12,11 +12,11 @@ public class History {
 		actions = new LinkedHashMap<>();
 	}
 	
-	public void setHistory(Event event, Nature reaction) {
+	public void addHistoricalEvents(Event event, Nature reaction) {
 		actions.put(event,reaction);
 	}
 	
 	public LinkedHashMap<Event,Nature> getHistory() {
-		return this.actions;
+		return actions;
 	}
 }
