@@ -16,6 +16,10 @@ public class History {
 		actions.put(event,reaction);
 	}
 	
+	public void addHistoricalEvents(LinkedHashMap<Event,Nature> actions) {
+		actions.putAll(actions);
+	}
+	
 	public LinkedHashMap<Event,Nature> getHistory() {
 		return actions;
 	}
