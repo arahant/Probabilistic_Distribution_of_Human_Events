@@ -119,9 +119,10 @@ public class Group {
 			D2+=Float.parseFloat(nature[1]);
 			D3+=Float.parseFloat(nature[2]);
 			D4+=Float.parseFloat(nature[3]);
-			Nature nat = new Nature(D1,D2,D3,D4);
-			this.setNature(nat);
 		}
+		int n = getStrength();
+		Nature nat = new Nature((float)D1/n,(float)D2/n,(float)D3/n,(float)D4/n);
+		this.setNature(nat);
 	}
 	
 	public Nature getNature() {
