@@ -10,7 +10,7 @@ public class Event {
 	private Nature nature;
 	private Date date;
 	
-	public void describeEvent(String nm, Date dt, Nature nat) {
+	public Event(String nm, Date dt, Nature nat) {
 		this.name = nm;
 		this.date = dt;
 		this.nature = nat;  
