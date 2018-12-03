@@ -9,7 +9,7 @@ import com.sk.program.nature.Nature;
 public class Human {
 
 	private int id;
-	private int groupId;
+	private Group group;
 	private String name;
 	
 	private float anxietyThreshold;
@@ -41,11 +41,46 @@ public class Human {
 		return name;
 	}
 	
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
+	public void setGroup(Group group) {
+		this.group = group;
+		influencePersonality();
 	}
-	public int getGroupId() {
-		return groupId;
+	public Group getGroup() {
+		return group;
+	}
+	
+	// group's overall nature and philosophy influencing the personality
+	private void influencePersonality() {
+		String[] nd = this.personality.getNature().split("-");
+		float d1 = Float.parseFloat(nd[0]);
+		float d2 = Float.parseFloat(nd[1]);
+		float d3 = Float.parseFloat(nd[2]);
+		float d4 = Float.parseFloat(nd[3]);
+		
+		// the nature and philosophy have slightly different weights of influence
+		Nature gn = this.group.getNature();
+		String[] gnd = gn.getNature().split("-");
+		float gnd1 = Float.parseFloat(gnd[0]);
+		float gnd2 = Float.parseFloat(gnd[1]);
+		float gnd3 = Float.parseFloat(gnd[2]);
+		float gnd4 = Float.parseFloat(gnd[3]);
+		float wgn = 1.5f;
+		
+		Nature ph = this.group.getPhilosophy();
+		String[] phd = ph.getNature().split("-");
+		float phd1 = Float.parseFloat(phd[0]);
+		float phd2 = Float.parseFloat(phd[1]);
+		float phd3 = Float.parseFloat(phd[2]);
+		float phd4 = Float.parseFloat(phd[3]);
+		float wph = 3.0f;
+		
+		d1 += gnd1/wgn + phd1/wph;
+		d2 += gnd2/wgn + phd2/wph;
+		d3 += gnd3/wgn + phd3/wph;
+		d4 += gnd4/wgn + phd4/wph;
+		
+		Nature newNature = new Nature(d1,d2,d3,d4);
+		this.setPersonality(newNature);
 	}
 
 	public void setPersonality(Nature p) {
@@ -74,13 +109,13 @@ public class Human {
 		for(int i=0;i<targets.size();i++) {
 			Human target = targets.get(i);
 			Action action = actions.get(i);
-			target.influenceNature(action,false);
-			actor.influenceNature(action,true);
+			target.influencePersonality(action,false);
+			actor.influencePersonality(action,true);
 			action.updateProbability();
 		}
 	}
 
-	private void influenceNature(Action action, boolean actor) {
+	private void influencePersonality(Action action, boolean actor) {
 		String[] human_nature = this.personality.getNature().split("-");
 		float AH = Float.parseFloat(human_nature[0]);
 		float BH = Float.parseFloat(human_nature[1]);
