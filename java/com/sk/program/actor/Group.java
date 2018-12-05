@@ -2,7 +2,9 @@ package com.sk.program.actor;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.sk.program.action.Event;
 import com.sk.program.nature.History;
@@ -25,6 +27,7 @@ public class Group {
 	private Human leader;
 	private List<Human> members;
 	private HashMap<Integer,Integer> traversed;
+	private static LinkedList<Group> groupList;
 
 	private static int count = 0;
 
@@ -35,16 +38,21 @@ public class Group {
 		calculateAnxietyThreshold();
 		calculateNature();
 	}
+	
+	public static Group getEventGroup() {
+		Scanner sc = new Scanner(System.in);
+		Group id = groupList.get(sc.nextInt());
+		sc.close();
+		return id;
+	}
 
 	// basics
 	public int getStrength() {
 		return members.size();
 	}
-
 	public String getName() {
 		return name;
 	}
-
 	public int getId() {
 		return id;
 	}
