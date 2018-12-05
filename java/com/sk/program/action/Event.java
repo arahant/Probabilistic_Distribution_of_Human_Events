@@ -1,7 +1,8 @@
 package com.sk.program.action;
 
-import java.sql.Date;
+import java.util.Date;
 
+import com.sk.program.actor.Group;
 import com.sk.program.nature.Nature;
 
 public class Event {
@@ -9,11 +10,30 @@ public class Event {
 	private String name;
 	private Nature nature;
 	private Date date;
+	private Group group;
 	
-	public Event(String nm, Date dt, Nature nat) {
+	// for historical events
+	public Event(Nature nat, String nm, Date dt) {
 		this.name = nm;
 		this.date = dt;
-		this.nature = nat;  
+		this.nature = nat;
+	}
+	
+	// for occurring events
+	public Event(Nature nat, String nm, Date dt, Group gr) {
+		this.name = nm;
+		this.date = dt;
+		this.nature = nat;
+		this.group = gr;
+	}
+	
+	public Event(Nature nat, Group g) {
+		this.nature = nat;
+		this.group = g;
+	}
+	
+	public Event(Nature nat) {
+		this.nature = nat;
 	}
 	
 	public String getName() {
@@ -26,6 +46,16 @@ public class Event {
 	
 	public Nature getNature() {
 		return nature;
+	}
+	
+	public Group getGroup() {
+		return group;
+	}
+	
+	public static Event generateEvent(Group g) {
+		Nature nat = Nature.getRandomNature();
+		Event event = new Event(nat,g);
+		return event;
 	}
 
 }
