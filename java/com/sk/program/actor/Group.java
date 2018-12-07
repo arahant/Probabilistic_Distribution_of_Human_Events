@@ -37,6 +37,7 @@ public class Group {
 		members.addAll(ms);
 		calculateAnxietyThreshold();
 		calculateNature();
+		updateLocation();
 	}
 	
 	public static Group getEventGroup() {
@@ -209,14 +210,17 @@ public class Group {
 		return philosophy;
 	}
 
-	// unity of the group
+	// unity of the group - depends on interpersonal proximity and 
 	public void calculateGroupUnity() {
+		int c=0;
 		for(Human member:members) {
 			LinkedHashMap<Human, Float> connections = member.getConnection();
 			for(Human link:connections.keySet())
-				if(members.contains(link) && !isTraversed(member.getId(),link.getId()))
-					unity+=connections.get(link);
+				if(members.contains(link) && !isTraversed(member.getId(),link.getId())) {
+					unity+=connections.get(link);c++;
+				}
 		}
+		unity = (float)unity/c;
 	}
 
 	private boolean isTraversed(int h1, int h2) {
@@ -230,6 +234,66 @@ public class Group {
 
 	public float getGroupUnity() {
 		return unity;
+	}
+
+	/* After forming a group, the members have a natural tendency to converge, 
+	 * depending on the proximity of the individual's personality
+	 * with the group's nature and philosophy. 
+	 * They converge towards the mean (centroid) of the group.
+	 */
+	private void updateLocation() {
+		float[] mean = getMeanLocation();
+		// each nature dimension has a different weight
+		int w1=3, w2=2, w3=1, w4=1;
+		
+		// group's nature
+		String[] grNat = this.nature.getNature().split("-");
+		float g1 = Float.parseFloat(grNat[0]);
+		float g2 = Float.parseFloat(grNat[1]);
+		float g3 = Float.parseFloat(grNat[2]);
+		float g4 = Float.parseFloat(grNat[3]);
+		
+		// group's philosophy
+		String[] grPh = this.philosophy.getNature().split("-");
+		float p1 = Float.parseFloat(grPh[0]);
+		float p2 = Float.parseFloat(grPh[1]);
+		float p3 = Float.parseFloat(grPh[2]);
+		float p4 = Float.parseFloat(grPh[3]);
+		
+		for(Human member:members) {
+			/* individual personalities' proximity to the group's nature
+			 * and philosophy determining the movement factor
+			 */
+			String[] nature = member.getPersonality().getNature().split("-");
+			float d1 = Float.parseFloat(nature[0]);
+			float d2 = Float.parseFloat(nature[1]);
+			float d3 = Float.parseFloat(nature[2]);
+			float d4 = Float.parseFloat(nature[3]);
+			
+			float diff1 = w1*Math.abs(1-d1+g1) + w2*Math.abs(1-d2+g2)
+					+ w3*Math.abs(1-d3+g3) + w4*Math.abs(1-d4+g4);
+			float diff2 = w1*Math.abs(1-d1+p1) + w2*Math.abs(1-d2+p2)
+					+ w3*Math.abs(1-d3+p3) + w4*Math.abs(1-d4+p4);
+			float factor = unity*diff1*diff2;
+			
+			float[] loc = member.getLocation();
+			loc[0] -= (float)(loc[0]-mean[0])*factor;
+			loc[1] -= (float)(loc[1]-mean[1])*factor;
+			member.setLocation(loc);
+		}
+	}
+	
+	private float[] getMeanLocation() {
+		float meanLat = 0;
+		float meanLon = 0;
+		for(Human member:members) {
+			float weight = member.getConnection().get(leader);
+			meanLat += member.getLatitude()*weight;
+			meanLon += member.getLongitude()*weight;
+		}
+		meanLat = (float)meanLat/getStrength();
+		meanLon = (float)meanLon/getStrength();
+		return new float[] {meanLat,meanLon};
 	}
 
 }
