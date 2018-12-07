@@ -13,9 +13,8 @@ public class Human {
 	private int id;
 	private Group group;
 	private String name;
-	
+	private float latitude, longitude;
 	private float anxietyThreshold;
-	private float proximity;
 	private Nature personality;
 	private LinkedHashMap<Human,Float> connections;
 	private static List<Human> population;
@@ -49,7 +48,7 @@ public class Human {
 		return name;
 	}
 	
-	// connections
+	// connections - weight acts as interpersonal proximity
 	public void addConnection(Human arg, float weight) {
 		connections.put(arg,weight);
 	}
@@ -122,12 +121,24 @@ public class Human {
 		return anxietyThreshold;
 	}
 	
-	// proximity
-	public void setProximity(float pr) {
-		this.proximity = pr;
+	// spatial location of the individual
+	public void setLocation(float lat, float lon) {
+		this.latitude = lat;
+		this.longitude = lon;
 	}
-	public float getProximity() {
-		return proximity;
+	public void setLocation(float[] loc) {
+		this.latitude = loc[0];
+		this.longitude = loc[1];
+	}
+	
+	public float getLatitude() {
+		return latitude;
+	}
+	public float getLongitude() {
+		return longitude;
+	}
+	public float[] getLocation() {
+		return new float[] {latitude,longitude};
 	}
 
 	// An action influences both the actor and target(s) and changes the probability of the nature of the action
