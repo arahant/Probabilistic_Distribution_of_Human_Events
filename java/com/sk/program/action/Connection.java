@@ -17,6 +17,7 @@ public class Connection {
 			float weight = 1/sim;
 			actor.addConnection(target, weight);
 			updateNature(actor);
+			//updateLocation(actor);
 		}
 	}
 	
@@ -54,6 +55,25 @@ public class Connection {
 		
 		Nature newNature = new Nature((float)(D1+d1/W),(float)(D2+d2/W),(float)(D3+d3/W),(float)(D4+d4/W));
 		actor.setPersonality(newNature);
+	}
+	
+	// strongly connected individuals tend to converge
+	// normalizing the difference with contacts size and weight
+	private static void updateLocation(Human actor) {
+		float max = 0;
+		for(Human m:actor.getConnection().keySet())
+			if(actor.getConnection().get(m)>max)
+				max = actor.getConnection().get(m);
+		int n = actor.getConnection().size();
+		for(Human contact:actor.getConnection().keySet()) {
+			float[] loc1 = actor.getLocation();
+			float[] loc2 = contact.getLocation();
+			float weight = actor.getConnection().get(contact);
+			float diffX = Math.abs((float)(loc1[0]-loc2[0])*weight)/(max*n);
+			float diffY = Math.abs((float)(loc1[1]-loc2[1])*weight)/(max*n);
+			actor.setLocation(loc1[0]+diffX, loc1[1]+diffY);
+			contact.setLocation(loc2[0]-diffX, loc2[1]-diffY);
+		}
 	}
 
 }
